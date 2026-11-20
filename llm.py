@@ -4,36 +4,50 @@ from pydantic import BaseModel
 from typing import Annotated
 from langchain_core.messages import AnyMessage
 from langgraph.graph import add_messages,StateGraph,START,END
+from model.models import get_chat_model
+from langchain_tavily import TavilySearch
 
 
 #load environmental variables
 load_dotenv()
 
 
-model=init_chat_model(model="gemini-3.5-flash-lite",model_provider="google_genai")
+model=get_chat_model()
+
+output=model.invoke("hello")
+print(output)
 
 
-#defined class state
-class ResearchState(BaseModel):
-    messages:Annotated[list[AnyMessage], add_messages]
+
+# #defined class state
+# class ResearchState(BaseModel):
+#     query:str
+#     research_findings:list=[]
 
 
-#create node
-def research_data(state:ResearchState):
-    output=model.invoke(state.messages)
-    return {'messages':[output]}
+    
+# tavily=TavilySearch(max_results=5)
 
-#create graph
-graph=StateGraph(ResearchState)
+# #create node
+# def research_node(state:ResearchState):
+#     query=state.query
+#     output=tavily.invoke({'query':query})
+#     return {'research_findings':output}
 
-#add node
-graph.add_node("research_node",research_data)
 
-#add edge
-graph.add_edge(START,"research_node")
-graph.add_edge("research_node",END)
+# #create graph
+# graph=StateGraph(ResearchState)
 
-workflow=graph.compile()
+# #add node
+# graph.add_node("research_node",research_node)
 
-response=workflow.invoke({'messages':"hello"})
-print(response)
+# #add edge
+# graph.add_edge(START,"research_node")
+# graph.add_edge("research_node",END)
+
+# workflow=graph.compile()
+
+# response=workflow.invoke({"query": "Latest developments in artificial intelligence"})
+# print(response.research_findings)
+
+

@@ -4,50 +4,39 @@ from pydantic import BaseModel
 from typing import Annotated
 from langchain_core.messages import AnyMessage
 from langgraph.graph import add_messages,StateGraph,START,END
-from model.models import get_chat_model
-from langchain_tavily import TavilySearch
+from agents.research_agent import research_agent
 
 
 #load environmental variables
 load_dotenv()
 
-
-model=get_chat_model()
-
-output=model.invoke("hello")
-print(output)
-
-
-
-# #defined class state
-# class ResearchState(BaseModel):
-#     query:str
-#     research_findings:list=[]
-
-
+#defined class state
+class ResearchState(BaseModel):
+    query:str
+    research_findings:list=[]
     
-# tavily=TavilySearch(max_results=5)
 
-# #create node
-# def research_node(state:ResearchState):
-#     query=state.query
-#     output=tavily.invoke({'query':query})
-#     return {'research_findings':output}
+#create node
+def research_node(state:ResearchState):
+    query=state.query
+    output=research_agent(query)
+    return {'research_findings':output}
 
 
-# #create graph
-# graph=StateGraph(ResearchState)
 
-# #add node
-# graph.add_node("research_node",research_node)
+#create graph
+graph=StateGraph(ResearchState)
 
-# #add edge
-# graph.add_edge(START,"research_node")
-# graph.add_edge("research_node",END)
+#add node
+graph.add_node("research_node",research_node)
 
-# workflow=graph.compile()
+#add edge
+graph.add_edge(START,"research_node")
+graph.add_edge("research_node",END)
 
-# response=workflow.invoke({"query": "Latest developments in artificial intelligence"})
-# print(response.research_findings)
+workflow=graph.compile()
+
+response=workflow.invoke({"query": "Analyze the food delivery market in Nepal"})
+print(response)
 
 

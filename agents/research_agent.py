@@ -9,7 +9,8 @@ tavily=TavilySearch(max_results=5)
 agent=create_agent(model=get_chat_model(),tools=[tavily],system_prompt=RESEARCH_AGENT_PROMPT)
 
 
-def research_agent(query):
+def research_agent(query:str):
+    """Searches the web and gather information"""
     response=agent.invoke({"messages": query})
     results=[]
     for message in response["messages"][:3]:

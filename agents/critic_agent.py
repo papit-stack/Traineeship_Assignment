@@ -18,7 +18,7 @@ def critic_agent(query:str,research_findings:list, draft):
 
                 Research findings:
                 {research_findings}
-
+                
                 Analyst draft:
                 {draft}
 

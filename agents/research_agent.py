@@ -13,7 +13,7 @@ def research_agent(query:str):
     """Searches the web and gather information"""
     response=agent.invoke({"messages": query})
     results=[]
-    for message in response["messages"][:3]:
+    for message in response["messages"]:
         if message.type == "tool" and message.name=="tavily_search":
             tool_data = json.loads(message.content)
 

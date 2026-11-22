@@ -44,7 +44,7 @@ Instructions:
 1. Carefully examine all research findings.
 2. Identify the most important information relevant to the user's original query.
 3. Write a short summary of the market or company.
-4. Identify up to two relevant competitors.
+4. Identify relevant competitors.
 5. Highlight important market observations, trends, opportunities and challenges.
 6. Include source URLs that support the information.
 7. Identify important information that is unavailable from the provided research.

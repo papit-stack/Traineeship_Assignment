@@ -13,16 +13,19 @@ def research_agent(query:str):
     response=agent.invoke({"messages": query})
     results=[]
     for message in response["messages"]:
+        # TavilySearch reports its calls under this registered tool name.
         if message.type == "tool" and message.name=="tavily_search":
-            tool_data = json.loads(message.content)
-
-            # Extract search results
-            for data in tool_data["results"]:
-                results.append({
-                    "url": data["url"],
-                    "title": data["title"],
-                    "content": data["content"]
-                })
+            try:
+                tool_data = json.loads(message.content)
+                for data in tool_data["results"]:
+                    results.append({
+                        "url": data["url"],
+                        "title": data["title"],
+                        "content": data["content"]
+                    })
+            except Exception as e:
+                print(f"Error occured at research agent while extracting tool data. {e}")
+                
     return results
 
 if __name__=="__main__":

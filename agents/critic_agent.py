@@ -8,7 +8,7 @@ agent=create_agent(model=get_chat_model(),system_prompt=CRITIC_AGENT_PROMPT,resp
 
 
 def critic_agent(query:str,research_findings:list, draft):
-
+    """Evaluate the analyst's draft and return a structured critique."""
     response = agent.invoke({
         "messages": [
             {

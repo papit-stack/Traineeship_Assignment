@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import Optional
 from langgraph.graph import StateGraph,START,END
@@ -8,11 +7,6 @@ from agents.critic_agent import critic_agent
 from schema import ResearchBrief,CriticSchema
 
 
-#load environmental variables
-load_dotenv()
-
-
-#Shared state
 class ResearchState(BaseModel):
     query:str   
     research_findings: Optional[list] = None
@@ -21,7 +15,6 @@ class ResearchState(BaseModel):
     retries:int=0
     
 
-#create node
 def research_node(state:ResearchState):
     """Search on web and gather research findings"""
     query=state.query
@@ -33,6 +26,8 @@ def analyst_node(state:ResearchState):
     output=analyst_agent(state.query,state.research_findings,state.research_brief,
                          (state.evaluation.feedback if state.evaluation else None))
     retries=state.retries
+    # Only a rejected draft triggers a revision, so count a retry once an
+    # evaluation exists to respond to.
     if state.evaluation is not None:
         retries+=1
     return {'research_brief':output,"retries":retries}
@@ -43,6 +38,7 @@ def critic_node(state:ResearchState):
     return {'evaluation':output}
 
 def critic_router(state:ResearchState):
+    """Stop on approval or after the single allowed revision, else loop back."""
     if state.evaluation.decision=="approved":
         return "end"
     if state.retries<1:
@@ -50,15 +46,12 @@ def critic_router(state:ResearchState):
     return "end"
 
 
-#create graph
 graph=StateGraph(ResearchState)
 
-#add node
 graph.add_node("research_node",research_node)
 graph.add_node("analyst_node",analyst_node)
 graph.add_node("critic_node",critic_node)
 
-#add edge
 graph.add_edge(START,"research_node")
 graph.add_edge("research_node","analyst_node")
 graph.add_edge("analyst_node","critic_node")

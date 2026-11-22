@@ -8,7 +8,6 @@ tavily=TavilySearch(max_results=5)
 
 agent=create_agent(model=get_chat_model(),tools=[tavily],system_prompt=RESEARCH_AGENT_PROMPT)
 
-
 def research_agent(query:str):
     """Searches the web and gather information"""
     response=agent.invoke({"messages": query})
@@ -26,6 +25,6 @@ def research_agent(query:str):
                 })
     return results
 
-if __name__=="__main":
+if __name__=="__main__":
     response=research_agent("Analyze the food delivery market in Nepal")
     print(response)

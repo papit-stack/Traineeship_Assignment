@@ -7,5 +7,5 @@ load_dotenv()
 
 def get_chat_model():
     """Returns gemini chat model"""
-    gemini_model=init_chat_model(model=GEMINI_MODEL,model_provider=MODEL_PROVIDER)
+    gemini_model=init_chat_model(model=GEMINI_MODEL,model_provider=MODEL_PROVIDER,max_retries=3,timeout=30)
     return gemini_model

@@ -68,7 +68,7 @@ graph.add_conditional_edges("critic_node",critic_router,{"end":END,"need_improve
 workflow=graph.compile()
 
 if __name__=="__main__":
-    response=workflow.invoke({"query": "Analyze the electric vehicle market in Nepal."})
+    response=workflow.invoke({"query": "Analyze the e-commerce market in Nepal."})
     print(f"Summary: {response['research_brief'].summary} ")
     print(f"Competitiors: {response['research_brief'].competitors} ")
     print(f"Key Observation: {response['research_brief'].key_observation} ")

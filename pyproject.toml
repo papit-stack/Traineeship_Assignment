@@ -9,4 +9,5 @@ dependencies = [
     "langchain>=1.5.2",
     "langchain-google-genai>=4.5.2",
     "langchain-tavily>=0.2.18",
+    "streamlit>=1.67.0",
 ]
